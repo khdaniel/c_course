@@ -2,6 +2,9 @@
 #define PROCESS_FILE
 
 #include <stdbool.h>
+#include <inttypes.h>
+
+#pragma pack(push, 1)
 
 typedef struct {
     char *filePath;    
@@ -17,6 +20,7 @@ typedef struct {
     uint32_t centralDirectoryOffset;
 } EOCDData;
 
+
 typedef struct {
     uint32_t signature;
     uint16_t diskNumber;
@@ -28,8 +32,7 @@ typedef struct {
     uint16_t commentLength;
 } EOCD;
 
-typedef struct CentralDirectoryFileHeader
-{   
+typedef struct {   
     uint16_t versionMadeBy; 
     uint16_t versionToExtract;    
     uint16_t generalPurposeBitFlag;    
@@ -59,7 +62,9 @@ void enrichFilesDetails(rawFile*);
 int processFiles(processing*);
 
 void printFileNames(FILE*, EOCDData*);
+void printFileName(CDFH*, FILE*);
 
 void showDetails(char *);
 
+#pragma pack(pop)
 #endif

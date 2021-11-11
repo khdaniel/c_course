@@ -12,13 +12,16 @@ bool fileExists(rawFile *f) {
 }
 
 int processFiles(processing *app) {           
+    printf("=================================================================\n");
     for (int i = 0; i < app->fileCount; i++) {
         rawFile* file = app->files[i];  
         if (fileExists(file)) {
             printf("Processing file: %20s", file->filePath);
             showDetails(file->filePath);   
+        } else {
+            printf("Processing file: %20s doesn't exist......skipped\n", file->filePath);
         }
-        printf("=================================================\n");        
+        printf("=================================================================\n");                
     }
     return EXIT_SUCCESS;
 }
@@ -59,14 +62,9 @@ void printFileNames(FILE *fp, EOCDData *eocd) {
         fseek(fp, current_offset, 0);     
         fread(&signatureBuffer, sizeof(signatureBuffer), 1, fp);
         if (signatureBuffer == 0x02014b50) {                  
-            fread(cdfh, sizeof(CDFH), 1, fp); 
-            uint8_t *filename = (uint8_t*) malloc(sizeof(uint8_t) * cdfh->filenameLength);
-            fread(filename, sizeof(uint8_t), cdfh->filenameLength, fp);
-            filename[cdfh->filenameLength-2] = '\0';
-            printf("%s\n", filename);
-            free(filename);     
-            filename = NULL;
-            current_offset += (sizeof(CDFH) + sizeof(uint16_t) + (cdfh->filenameLength) + (cdfh->fileCommentLength) + (cdfh -> extraFieldLength));         
+            fread(cdfh, sizeof(CDFH), 1, fp);             
+            printFileName(cdfh, fp);         
+            current_offset += (sizeof(CDFH) + (cdfh->filenameLength) + (cdfh->fileCommentLength) + (cdfh -> extraFieldLength));         
         } else {               
             current_offset += 1;
         }                      
@@ -75,24 +73,31 @@ void printFileNames(FILE *fp, EOCDData *eocd) {
     cdfh = NULL;
 }
 
-
+void printFileName(CDFH *cdfh, FILE *fp) {
+    uint8_t *filename = (uint8_t*) malloc(sizeof(uint8_t) * cdfh->filenameLength);
+    fread(filename, sizeof(uint8_t), cdfh->filenameLength, fp);            
+    filename[cdfh->filenameLength] = '\0';
+    printf("%s\n", filename);
+    free(filename);     
+    filename = NULL; 
+}
 
 void showDetails(char *zipFilePath) {    
     FILE *fp = fopen(zipFilePath, "rb");    
     if (fp == NULL) {
-        puts("Error opening the file");        
+        printf(" UNABLE TO OPEN THE FILE\n");
+        return;
     }
     
     EOCDData eocd = getEOCD(fp);
 
     if (eocd.address) {
-        printf(" is zipped..........files: \n");
+        printf(" is zipped.........  files: \n");
         printFileNames(fp, &eocd);
     } else {
         printf(" is not zipped......skipped\n");
     }
-    
-               
+                   
     fclose(fp);
 }
 

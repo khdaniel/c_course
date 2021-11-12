@@ -74,7 +74,7 @@ void printFileNames(FILE *fp, EOCDData *eocd) {
 }
 
 void printFileName(CDFH *cdfh, FILE *fp) {
-    uint8_t *filename = (uint8_t*) malloc(sizeof(uint8_t) * (cdfh->filenameLength + 1));
+    uint8_t *filename = (uint8_t*) malloc(cdfh->filenameLength + 1);
     fread(filename, sizeof(uint8_t), cdfh->filenameLength, fp);            
     filename[cdfh->filenameLength] = '\0';
     printf("%s\n", filename);

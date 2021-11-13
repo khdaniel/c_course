@@ -1,6 +1,7 @@
 .DS_Store
 .metals/
 .vscode/
-03-types-homework.pdf
-src/app
+*.pdf
+*/src/app
+*.zip
 ../.DS_Store

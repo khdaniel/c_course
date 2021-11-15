@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-void showMessageAndAbort(char *message) {
+void showMessageAndAbort(const char *message) {
     printf("%s", message);
     exit(EXIT_FAILURE);
 }

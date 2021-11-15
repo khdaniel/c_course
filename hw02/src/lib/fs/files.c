@@ -6,5 +6,3 @@ bool filePathExists(char *filePath) {
     struct stat buffer;
     return stat(filePath, &buffer) == 0;
 }
-
-

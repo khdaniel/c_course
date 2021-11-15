@@ -1,7 +1,7 @@
 #ifndef CMD_H
 #define CMD_H
 
-typedef enum {WRONG_ENCODING=-100, CP1251=0, KOI8, ISO8859} encoding;
+#include "../convert/convert.h"
 
 typedef struct {
     char *inputFilePath;

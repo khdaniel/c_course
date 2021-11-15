@@ -5,7 +5,7 @@
 #include "../utils/utils.h"
 
 const char* MSG_APP_USAGE = "Please provide required parameters: " \
-        "\n\t-i <path to the source file>" \
+        "\n\t-f <path to the source file>" \
         "\n\t-o <path to the encoding conversion result file>" \
         "\n\t-e <source encoding cp1251|koi8|iso8859>\nAbort.\n";
 
@@ -45,7 +45,7 @@ cmdArgs* parseCmd(int argc, char **argv) {
             outputFilePath = processArgumentValue(flagValue);  
             i++;          
         }             
-        else if (strcmp(flag, "-i") == 0) {
+        else if (strcmp(flag, "-f") == 0) {
             inputFilePath = processArgumentValue(flagValue);
             i++;
         }            
@@ -89,7 +89,6 @@ char* processArgumentValue(char* argument) {
     argumentValue[paramLen] = '\0';    
     return argumentValue;
 }
-
 
 encoding processProvidedEncoding(char *encodingStr) {
     if (strcmp(encodingStr, "cp1251") ==0 ) return CP1251;

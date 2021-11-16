@@ -61,13 +61,10 @@ cmdArgs* parseCmd(int argc, char **argv) {
         showMessageAndAbort(MSG_APP_USAGE);
     
     // verify the provided encoding is in the list cp1251|koi8|iso8859
-    // otherwise show message and abort
-    sourceEncoding = processProvidedEncoding(sourceEncodingStr);
-    free(sourceEncodingStr);  
-    if (sourceEncoding == WRONG_ENCODING) 
+    // otherwise show message and abort    
+    if ((sourceEncoding = processProvidedEncoding(sourceEncodingStr)) == WRONG_ENCODING) 
         showMessageAndAbort(MSG_ENCODING_PARAM_USAGE);
     
-
     // verify if the provided input file path exists
     // otherwise show message and abort
     if (!filePathExists(inputFilePath)) 
@@ -80,6 +77,7 @@ cmdArgs* parseCmd(int argc, char **argv) {
     result = (cmdArgs*) malloc(sizeof(cmdArgs));    
     result->inputFilePath = inputFilePath;
     result->outputFilePath = outputFilePath;
+    result->sourceEncodingStr = sourceEncodingStr;    
     result->sourceEncoding = sourceEncoding;
 
     return result; 
@@ -94,14 +92,15 @@ char* processArgumentValue(char* argument) {
 }
 
 encoding processProvidedEncoding(char *encodingStr) {
-    if (strcmp(encodingStr, "cp1251") ==0 ) return CP1251;
-    else if (strcmp(encodingStr, "koi8") ==0 ) return KOI8;
-    else if (strcmp(encodingStr, "iso8859") ==0 ) return ISO8859;
+    if (strcmp(encodingStr, "cp1251") == 0) return CP1251;
+    else if (strcmp(encodingStr, "koi8") == 0) return KOI8;
+    else if (strcmp(encodingStr, "iso8859") == 0) return ISO8859;
     else return WRONG_ENCODING;
 }
 
 void cmdArgsCleanup(cmdArgs *args) {
     free(args->inputFilePath);
     free(args->outputFilePath);
+    free(args->sourceEncodingStr);
     free(args);
 } 

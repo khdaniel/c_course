@@ -42,8 +42,8 @@ void convertFileEncoding(const long map[256], char *sourceFilePath, char *destFi
     uchar *sourceBuffer;    
     FILE *sourceFile = fopen(sourceFilePath, "r");
     FILE *destFile = fopen(destFilePath, "w");
-    char bomMarker[] = {0xEF, 0xBB, 0xBF};
-    fwrite(bomMarker, 3, sizeof(char), destFile); 
+    uchar bomMarker[] = {0xEF, 0xBB, 0xBF};
+    fwrite(bomMarker, 3, sizeof(uchar), destFile); 
     
     while(true) {        
         sourceBuffer = (uchar*) malloc(BUFFER_SIZE+1);

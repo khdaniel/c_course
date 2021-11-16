@@ -59,4 +59,6 @@ static const long KOI8ToUTF[256] = {
 
 void convertFileEncoding(const long[], char *sourceFilePath, char *destFilePath);
 
+void letterCleanup(letter*);
+
 #endif

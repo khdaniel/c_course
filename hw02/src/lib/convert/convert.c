@@ -25,11 +25,16 @@ letter *convertLetterEncoding(const long map[256], uchar source) {
     return result;
 }
 
+void letterCleanup(letter *val) {
+    free(val->lvl);
+    free(val);
+}
+
 void convertBufferEncoding(const long map[256], uchar *sourceBuffer, size_t bufferSize, FILE* outputFile) {    
     for (size_t i = 0; i < bufferSize; i++) {        
         letter *lt = convertLetterEncoding(map, sourceBuffer[i]);  
         fwrite(lt->lvl, lt->lsz, 1, outputFile);
-        free(lt);
+        letterCleanup(lt);
     }        
 }
 
@@ -44,11 +49,11 @@ void convertFileEncoding(const long map[256], char *sourceFilePath, char *destFi
         sourceBuffer = (uchar*) malloc(BUFFER_SIZE+1);
         size_t bufferLength = fread(sourceBuffer, sizeof(uchar), BUFFER_SIZE, sourceFile);                                 
         convertBufferEncoding(map, sourceBuffer, bufferLength, destFile);                                    
+        free(sourceBuffer);
         if ((bufferLength < BUFFER_SIZE) | feof(sourceFile)) {            
             break; 
         }                        
-    }
-    free(sourceBuffer); 
+    }         
 
     fclose(sourceFile);
     fflush(destFile);

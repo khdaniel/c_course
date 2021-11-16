@@ -6,6 +6,7 @@
 typedef struct {
     char *inputFilePath;
     char *outputFilePath;
+    char *sourceEncodingStr;
     encoding sourceEncoding;
 } cmdArgs;
 

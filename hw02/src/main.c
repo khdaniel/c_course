@@ -22,7 +22,10 @@ int main(int argc, char **argv) {
             break;
     }
     
+    free(args->inputFilePath);
+    free(args->outputFilePath);
+    free(args->sourceEncoding);
     free(args);    
-    
+
     return EXIT_SUCCESS;
 }

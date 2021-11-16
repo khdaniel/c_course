@@ -96,3 +96,9 @@ encoding processProvidedEncoding(char *encodingStr) {
     else if (strcmp(encodingStr, "iso8859") ==0 ) return ISO8859;
     else return WRONG_ENCODING;
 }
+
+void cmdArgsCleanup(cmdArgs *args) {
+    free(args->inputFilePath);
+    free(args->outputFilePath);
+    free(args);
+} 

@@ -17,4 +17,6 @@ char* processArgumentValue(char*);
 
 encoding processProvidedEncoding(char*);
 
+void cmdArgsCleanup(cmdArgs*);
+
 #endif

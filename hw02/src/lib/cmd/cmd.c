@@ -62,8 +62,11 @@ cmdArgs* parseCmd(int argc, char **argv) {
     
     // verify the provided encoding is in the list cp1251|koi8|iso8859
     // otherwise show message and abort
-    if ((sourceEncoding = processProvidedEncoding(sourceEncodingStr)) == WRONG_ENCODING)
-        showMessageAndAbort(MSG_ENCODING_PARAM_USAGE);  
+    sourceEncoding = processProvidedEncoding(sourceEncodingStr);
+    free(sourceEncodingStr);  
+    if (sourceEncoding == WRONG_ENCODING) 
+        showMessageAndAbort(MSG_ENCODING_PARAM_USAGE);
+    
 
     // verify if the provided input file path exists
     // otherwise show message and abort

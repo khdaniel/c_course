@@ -23,12 +23,12 @@ cmdArgs* parseCmd(int argc, char **argv) {
     char *sourceEncodingStr = NULL;
     encoding sourceEncoding = -1;
     
-    // at least 7 arguments should be provided:
+    // at least 3 keys with values should be provided:
     // 0. programm
     // 1. -e key
     // 2. -e value
-    // 3. -i key
-    // 4. -i value
+    // 3. -f key
+    // 4. -f value
     // 5. -o key
     // 6. -o value
     // otherwise show app usage message and abort
@@ -36,6 +36,8 @@ cmdArgs* parseCmd(int argc, char **argv) {
         showMessageAndAbort(MSG_APP_USAGE);
     }
     
+    result = (cmdArgs*) malloc(sizeof(cmdArgs));
+
     // process provided arguments with flags -i -o -e
     for (int i = 1; i < argc-1; i++) {
         char *flag = argv[i];
@@ -54,31 +56,38 @@ cmdArgs* parseCmd(int argc, char **argv) {
             i++;                          
         }                   
     }
-    
-    // check whether all required parameters were provided
-    // otherwise show message and abort
-    if (outputFilePath == NULL | inputFilePath == NULL | sourceEncodingStr == NULL) 
-        showMessageAndAbort(MSG_APP_USAGE);
-    
-    // verify the provided encoding is in the list cp1251|koi8|iso8859
-    // otherwise show message and abort    
-    if ((sourceEncoding = processProvidedEncoding(sourceEncodingStr)) == WRONG_ENCODING) 
-        showMessageAndAbort(MSG_ENCODING_PARAM_USAGE);
-    
-    // verify if the provided input file path exists
-    // otherwise show message and abort
-    if (!filePathExists(inputFilePath)) 
-        showMessageAndAbort(MSG_INPUT_FILE_DOESNT_EXIST);
 
-    // if all required parameters were provided 
-    // and the provided source encoding seems correct value
-    // and the provided input file exists
-    // proceed 
-    result = (cmdArgs*) malloc(sizeof(cmdArgs));    
     result->inputFilePath = inputFilePath;
     result->outputFilePath = outputFilePath;
     result->sourceEncodingStr = sourceEncodingStr;    
     result->sourceEncoding = sourceEncoding;
+    
+    // check whether all required parameters were provided
+    // otherwise show message and abort
+    if ((outputFilePath == NULL) | (inputFilePath == NULL) | (sourceEncodingStr == NULL)) {
+        cmdArgsCleanup(result);
+        showMessageAndAbort(MSG_APP_USAGE);
+    }
+        
+    
+    // verify the provided encoding is in the list cp1251|koi8|iso8859
+    // otherwise show message and abort    
+    if ((sourceEncoding = processProvidedEncoding(sourceEncodingStr)) == WRONG_ENCODING) {
+        cmdArgsCleanup(result);
+        showMessageAndAbort(MSG_ENCODING_PARAM_USAGE);
+    }
+    
+    // verify if the provided input file path exists
+    // otherwise show message and abort
+    if (!filePathExists(inputFilePath)) {
+        cmdArgsCleanup(result);
+        showMessageAndAbort(MSG_INPUT_FILE_DOESNT_EXIST);
+    }
+
+    // if all required parameters were provided 
+    // and the provided source encoding seems correct value
+    // and the provided input file exists
+    // proceed             
 
     return result; 
 }

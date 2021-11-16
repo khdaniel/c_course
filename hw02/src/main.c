@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
         default:
             break;
     }
-    
+
     cmdArgsCleanup(args);
     
     return EXIT_SUCCESS;

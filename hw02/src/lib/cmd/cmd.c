@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cmd.h"
-#include "../fs/files.h"
 #include "../utils/utils.h"
 
 const char* MSG_APP_USAGE = "Please provide required parameters: " \
@@ -59,8 +58,7 @@ cmdArgs* parseCmd(int argc, char **argv) {
 
     result->inputFilePath = inputFilePath;
     result->outputFilePath = outputFilePath;
-    result->sourceEncodingStr = sourceEncodingStr;    
-    result->sourceEncoding = sourceEncoding;
+    result->sourceEncodingStr = sourceEncodingStr;        
     
     // check whether all required parameters were provided
     // otherwise show message and abort
@@ -75,7 +73,7 @@ cmdArgs* parseCmd(int argc, char **argv) {
     if ((sourceEncoding = processProvidedEncoding(sourceEncodingStr)) == WRONG_ENCODING) {
         cmdArgsCleanup(result);
         showMessageAndAbort(MSG_ENCODING_PARAM_USAGE);
-    }
+    }    
     
     // verify if the provided input file path exists
     // otherwise show message and abort
@@ -87,8 +85,8 @@ cmdArgs* parseCmd(int argc, char **argv) {
     // if all required parameters were provided 
     // and the provided source encoding seems correct value
     // and the provided input file exists
-    // proceed             
-
+    // proceed
+    result->sourceEncoding = sourceEncoding;    
     return result; 
 }
 
